@@ -7,7 +7,7 @@ description: Build OR modify FigJam boards via the Figma Plugin API. Use when as
 
 Build or modify FigJam boards via the Figma Plugin API. Use whenever the work involves visual or content changes to a FigJam — initial creation, edits, extensions, layout fixes, or restructuring.
 
-**Prerequisites:** Load `figma-plugin:figma-use` before calling `use_figma`. This skill handles content strategy and FigJam patterns; `figma-use` handles the Plugin API rules and is provided by the shared `figma-plugin` skill set.
+**Prerequisites:** Load `figma-plugin:figma-use` AND `figma-plugin:figma-use-figjam` before calling `use_figma`. `figma-use` covers Plugin API rules, `figma-use-figjam` covers FigJam-native node types (sticky, shape-with-text, connector, section, table, label).
 
 **When to load this skill.** Build, edit, extend, restructure, or add content to a FigJam board — not just initial creation. If the user shares a FigJam URL (`figma.com/board/...`) and asks for any visual or content change, load this. Skip only for one-off tweaks to a single existing node (recolor one rectangle, edit one text node) that don't need composition guidance.
 
