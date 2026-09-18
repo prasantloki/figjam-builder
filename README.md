@@ -1,25 +1,27 @@
 # FigJam Builder
 
-A Claude skill that builds and modifies FigJam boards through the Figma Plugin API. It teaches Claude how to compose boards using FigJam's type scale, color, and layout patterns so the output reads as designed instead of generated.
+A skill for Claude Code, Codex, and other compatible agents that builds and modifies FigJam boards through the Figma Plugin API. It brings opinionated layout, typography, color, and native editing guidance to boards that should feel expressive and be easy to scan.
 
 ## Why this exists
 
-FigJam earns its keep when spatial layout matters: side-by-side comparisons, multi-team status views, boards that accumulate content over time. Building them by hand is slow when you already know what should be on them. Asking an LLM without guidance produces boards that read like generic output (uniform grids, decorative emoji, every section the same volume). This skill closes that gap by giving Claude a set of visual principles to hold in its head and concrete patterns to apply.
+FigJam earns its keep when spatial layout matters: side-by-side comparisons, multi-team status views, boards that accumulate content over time. Building them by hand is slow when you already know what should be on them. This skill gives an agent visual principles and construction patterns for making those boards clear, playful, and useful in a working session.
 
 ## What it produces
 
 Boards (new files, or edits to existing ones) built from FigJam primitives:
 
-- Sections, cards, stickies, connectors, text, and images
-- A type scale and palette picked from a defined system, not freestyled
+- Native sections, shapes with editable text, stickies, tables, connectors, and images
+- Paired typography and a coherent palette that preserve hierarchy at overview zoom
 - Section hierarchy that descends from hero to supporting to appendix
 - Layouts that match the shape of the container they sit in
-- Emphasis markers used sparingly, only where they earn their weight
+- Expressive color, artwork, and intentional looseness without obscuring facts or arrows
+- Usable contribution space, with representative note-entry and connector move/resize checks
+- Charts with honest scales, clear labels, and accessible series identities
 
 ## Requirements
 
-- Figma MCP tools enabled: `use_figma`, `get_figjam`, `upload_assets`, `create_new_file`, `generate_diagram`
-- The `figma-plugin:figma-use` companion skill loaded before any `use_figma` call. It carries the Plugin API rules this skill builds on.
+- A connected Figma MCP integration with `use_figma` and board inspection/screenshot tools. Media upload, file creation, and generated diagrams additionally require their corresponding tools.
+- The `figma-use` and `figma-use-figjam` companion skills loaded before any `use_figma` call, using the names exposed by your client. They carry the Plugin API rules this skill builds on. Load the file-creation or diagram companion skill before using those tools.
 - A target FigJam file URL, or none if you want a new file created
 
 ## Installation
@@ -36,9 +38,15 @@ git clone https://github.com/prasantloki/figjam-builder.git ~/.claude/skills/fig
 2. Go to **Settings → Customize → Skills → "+" → "+ Create skill"**
 3. Upload the zip
 
+### Codex
+
+```bash
+git clone https://github.com/prasantloki/figjam-builder.git ~/.codex/skills/figjam-builder
+```
+
 ### Other clients (Cursor, VS Code, Copilot CLI, etc.)
 
-Add `SKILL.md` to your client's skills or context directory. Refer to your client's documentation for the exact location.
+Install the whole skill folder, including `SKILL.md` and `references/`, in your client's skills or context directory. The reference guides are required for the relevant workflows. Refer to your client's documentation for the exact location.
 
 ### Claude API
 
@@ -46,14 +54,14 @@ Upload via the `/v1/skills` endpoint. See the [Skills API docs](https://platform
 
 ## Usage
 
-Ask Claude naturally, with a FigJam URL when you have one:
+Ask your agent naturally, with a FigJam URL when you have one:
 
 - *"Build a status board for these projects: figma.com/board/..."*
 - *"Add a section to this board comparing the three directions: figma.com/board/..."*
 - *"Fix the layout on the bottom half: figma.com/board/..."*
 - *"Take these meeting notes and build a workshop board"*
 
-Without a URL, Claude creates a new FigJam file via `create_new_file` and returns the link.
+Without a URL, the agent can create a new FigJam file via `create_new_file` when that tool is available and return the link.
 
 ## How it works
 
@@ -61,6 +69,17 @@ Without a URL, Claude creates a new FigJam file via `create_new_file` and return
 2. Picks a palette and type scale up front so the board reads cohesively across sections
 3. Builds section by section, sizing containers to content in greenfield mode, fitting content to containers in modification mode
 4. Verifies between major steps with screenshots and reworks layout when it's off
+5. Checks native text fit, contribution space, and representative connector behavior before delivery
+
+## Reference guides
+
+- [Composition](references/composition-grammar.md): glance order, compact grouping, and traceable connections
+- [Typography](references/typography-grammar.md): paired roles, wrapping, and overview readability
+- [Primitives](references/primitive-grammar.md): choosing native forms and handling runtime limitations
+- [Expression](references/expressive-grammar.md): playful atmosphere without sacrificing clarity
+- [Data visualization](references/data-viz-grammar.md): chart selection, scales, and accessible labels
+
+Runtime-specific observations in the guides are not a guarantee of support in every Figma client. Follow the connected tool's current API and verify the rendered result.
 
 ## Customization
 
